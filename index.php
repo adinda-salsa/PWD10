@@ -1,5 +1,12 @@
 <?php
 require 'koneksi.php';
+session_start();
+
+//event button cari
+if(isset($_POST['cari'])){
+    $mahasiswa = cari($_POST['key']);
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -11,9 +18,17 @@ require 'koneksi.php';
     <title>Data Mahasiswa </title>
 </head>
 <body>
-    <h1>List Data Mahasiswa</h1>
+    <h1>Data Mahasiswa</h1>
     <a href="insert.php">Tambah Data</a>
     <br><br>
+    
+    <form action="" method="post">
+        <input type="text" name="key" placeholder="Isi Keyword" autocomplete="off">
+        <button type="submit" name="cari">Cari</button>
+    </form>
+
+    
+
     <table class="table table-hover" border="1">
         <!--baris header-->
         <tr>
@@ -24,6 +39,16 @@ require 'koneksi.php';
             <th>Prodi</th>
             <th>Aksi</th>
         </tr>
+
+        <!--cek data jika tidak ditemukan-->
+        <?php if(empty($mahasiswa)):?>
+            <tr>
+                <td colspan="6">
+                    <p>Data tidak ditemukan</p>
+                </td>
+            </tr>
+            <?php endif; ?>
+
         <?php
         $i = 1;
         $query = mysqli_query($koneksi, "select * from mahasiswa");
@@ -31,7 +56,7 @@ require 'koneksi.php';
             ?>
             <tr>
                 <td><?php echo $i; ?></td>
-                <td><img src="<?php echo $row['foto']; ?>" style="width: 200px; height: auto;"></td>
+                <td><?php echo "<img src='img/$data[foto]' width='100' height='auto'/>";?></td>
                 <td><?php echo $row['nim']; ?></td>
                 <td><?php echo $row['nama']; ?></td>
                 <td><?php echo $row['prodi']; ?></td>
@@ -44,5 +69,8 @@ require 'koneksi.php';
         }
         ?>
     </table>
+    <br><br>
+    <br><br>
+    <a href="logout.php">Logout</a>
 </body>
 </html>
